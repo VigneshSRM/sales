@@ -39,12 +39,16 @@ public final class Server {
     // ---------------- plumbing ----------------
     private Map<String, Object> user(HttpExchange x) {
         String c = x.getRequestHeaders().getFirst("Cookie");
-        if (c == null) return null;
-        for (String p : c.split(";")) {
-            String[] kv = p.trim().split("=", 2);
-            if (kv.length == 2 && kv[0].equals("sid")) return sessions.get(kv[1]);
-        }
-        return null;
+        if (c != null)
+            for (String p : c.split(";")) {
+                String[] kv = p.trim().split("=", 2);
+                if (kv.length == 2 && kv[0].equals("sid")) {
+                    Map<String, Object> u = sessions.get(kv[1]);
+                    if (u != null) return u;
+                }
+            }
+        String qsid = query(x).get("sid");   // fallback when cookies are stripped by a proxy
+        return qsid == null ? null : sessions.get(qsid);
     }
 
     private static Map<String, String> form(HttpExchange x) throws IOException {
@@ -147,8 +151,8 @@ public final class Server {
         String sid = UUID.randomUUID().toString().replace("-", "");
         sessions.put(sid, u);
         db.audit(String.valueOf(u.get("email")), "LOGIN", "app_user", u.get("id"));
-        x.getResponseHeaders().set("Set-Cookie", "sid=" + sid + "; HttpOnly; SameSite=Lax; Path=/");
-        redirect(x, "/app");
+        x.getResponseHeaders().set("Set-Cookie", "sid=" + sid + "; HttpOnly; Path=/");
+        redirect(x, "/app?sid=" + sid);
         return;
     }
 
