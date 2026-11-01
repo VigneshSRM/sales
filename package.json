@@ -1,0 +1,17 @@
+{
+  "name": "sales-pipeline-autopilot",
+  "version": "1.0.0",
+  "description": "Sales Pipeline Autopilot - local-first CRM, lead capture, scoring, engagement, scheduling and analytics (per Infeara Revenue OS blueprint v1.0)",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "seed": "node src/seed.js"
+  },
+  "license": "UNLICENSED",
+  "private": true,
+  "dependencies": {
+    "better-sqlite3": "^13.0.3",
+    "express": "^5.3.0"
+  }
+}
