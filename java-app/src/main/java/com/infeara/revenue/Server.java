@@ -168,7 +168,8 @@ public final class Server {
                 "<div><label>Team size</label><select name=\"team_size\"><option>1-50</option><option>50-200</option><option>200-500</option><option>500+</option></select></div></div>" +
                 "<label>What prompted you to reach out?</label><textarea name=\"message\" rows=\"3\"></textarea>" +
                 "<label style=\"display:flex;gap:8px;align-items:center;color:var(--ink)\"><input type=\"checkbox\" name=\"consent\" value=\"true\" required style=\"width:auto\"> I agree to be contacted about my enquiry (DPDP Act 2023 notice v1.0). *</label>" +
-                "<div style=\"margin-top:14px\"><button>Request a call</button></div></form></div>", null);
+                "<div style=\"margin-top:14px\"><button>Request a call</button></div></form>" +
+                "<p class=\"mut\" style=\"margin-top:18px\"><a href=\"/auth/login\">Team sign in →</a></p></div>", null);
     }
 
     private String bookingPage(Map<String, String> q) {
