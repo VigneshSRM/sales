@@ -9,11 +9,16 @@ public final class Views {
                 .replace(">", "&gt;").replace("\"", "&quot;");
     }
 
+    public static final ThreadLocal<String> SID = new ThreadLocal<>();
+    private static String sfx() { String s = SID.get(); return s == null ? "" : "?sid=" + s; }
+    private static String nav(String label, String href) { String s = SID.get(); return "<a href=\"" + href + (s == null ? "" : "?sid=" + s) + "\">" + label + "</a>"; }
     public static String page(String title, String body, Map<String, Object> user) {
+        String f = sfx();
         String nav = user == null ? "" : "<nav>" +
-                "<a href=\"/app\">Cockpit</a><a href=\"/app/leads\">Leads</a><a href=\"/app/pipeline\">Pipeline</a>" +
-                "<a href=\"/app/tasks\">Tasks</a><a href=\"/app/sequences\">Sequences</a><a href=\"/app/bookings\">Bookings</a>" +
-                "<a href=\"/app/reports\">Reports</a><a href=\"/app/audit\">Audit</a><a href=\"/app/settings\">Settings</a>" +
+                nav("Cockpit","/app") + nav("Leads","/app/leads") + nav("Pipeline","/app/pipeline") +
+                nav("Tasks","/app/tasks") + nav("Sequences","/app/sequences") + nav("Bookings","/app/bookings") +
+                nav("Reports","/app/reports") + nav("Audit","/app/audit") + nav("Settings","/app/settings") +
+
                 "<span class=\"who\">" + esc(user.get("full_name")) + " (" + esc(user.get("role")) + ")</span>" +
                 "<a href=\"/auth/logout\">Logout</a></nav>";
         return "<!doctype html><html><head><meta charset=\"utf-8\"><title>" + esc(title) + " — Sales Pipeline Autopilot</title>" +

@@ -103,6 +103,7 @@ public final class Server {
 
     // ---------------- dispatch ----------------
     private void dispatch(HttpExchange x) throws IOException {
+        Views.SID.set(query(x).get("sid"));
         try {
             String path = x.getRequestURI().getPath();
             String method = x.getRequestMethod();
@@ -125,6 +126,8 @@ public final class Server {
         } catch (Exception e) {
             e.printStackTrace();
             json(x, 500, err("INTERNAL", String.valueOf(e.getMessage())));
+        } finally {
+            Views.SID.remove();
         }
     }
 
