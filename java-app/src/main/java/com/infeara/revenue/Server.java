@@ -194,7 +194,19 @@ public final class Server {
 
     // ---------------- public API: capture ----------------
     private void capture(HttpExchange x) throws IOException {
-        Map<String, Object> b = Json.parseObject(new String(x.getRequestBody().readAllBytes(), StandardCharsets.UTF_8));
+        String raw = new String(x.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
+        Map<String, Object> b;
+        String ct = String.valueOf(x.getRequestHeaders().getFirst("Content-Type"));
+        if (ct.contains("application/x-www-form-urlencoded")) {
+            b = new LinkedHashMap<>();
+            for (String p : raw.split("&")) {
+                String[] kv = p.split("=", 2);
+                b.put(kv[0], kv.length > 1 ? java.net.URLDecoder.decode(kv[1], StandardCharsets.UTF_8) : "");
+            }
+            b.put("consent", "on".equals(b.get("consent")) || "true".equalsIgnoreCase(String.valueOf(b.get("consent"))) || Boolean.TRUE.equals(b.get("consent")));
+        } else {
+            b = Json.parseObject(raw);
+        }
         String trace = UUID.randomUUID().toString();
         Map<String, Object> cr = new LinkedHashMap<>();
         cr.put("payload", Json.write(b)); cr.put("validation", "RECEIVED"); cr.put("trace_id", trace);
