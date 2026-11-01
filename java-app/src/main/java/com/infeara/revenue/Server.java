@@ -52,7 +52,7 @@ public final class Server {
         String b = new String(x.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
         for (String p : b.split("&")) {
             String[] kv = p.split("=", 2);
-            m.put(kv[0], kv.length > 1 ? java.net.URLDecoder.decode(kv[1], java.nio.charset.StandardCharsets.UTF_8) : "");
+            m.put(kv[0], (kv.length > 1 ? java.net.URLDecoder.decode(kv[1], java.nio.charset.StandardCharsets.UTF_8) : "").trim());
         }
         return m;
     }
@@ -63,7 +63,7 @@ public final class Server {
         if (q == null) return m;
         for (String p : q.split("&")) {
             String[] kv = p.split("=", 2);
-            m.put(kv[0], kv.length > 1 ? java.net.URLDecoder.decode(kv[1], java.nio.charset.StandardCharsets.UTF_8) : "");
+            m.put(kv[0], (kv.length > 1 ? java.net.URLDecoder.decode(kv[1], java.nio.charset.StandardCharsets.UTF_8) : "").trim());
         }
         return m;
     }
@@ -202,7 +202,7 @@ public final class Server {
             b = new LinkedHashMap<>();
             for (String p : raw.split("&")) {
                 String[] kv = p.split("=", 2);
-                b.put(kv[0], kv.length > 1 ? java.net.URLDecoder.decode(kv[1], StandardCharsets.UTF_8) : "");
+                b.put(kv[0], (kv.length > 1 ? java.net.URLDecoder.decode(kv[1], StandardCharsets.UTF_8) : "").trim());
             }
             b.put("consent", "on".equals(b.get("consent")) || "true".equalsIgnoreCase(String.valueOf(b.get("consent"))) || Boolean.TRUE.equals(b.get("consent")));
         } else {
